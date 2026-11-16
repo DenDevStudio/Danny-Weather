@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "AppRelease": {
+      "title": "AppRelease",
+      "description": "Publicly readable cloud release and realtime accent theme config broadcast from DenDev Studio.",
+      "type": "object",
+      "properties": {
+        "authorId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the studio admin who created the release notice."
+        },
+        "targetVersion": {
+          "type": "string",
+          "description": "Target release version displayed to users (e.g., 2.1)."
+        },
+        "releaseNotes": {
+          "type": "string",
+          "description": "Changelog summary shown in the update announcement dialog."
+        },
+        "appTitle": {
+          "type": "string",
+          "description": "Customized app display title for this release."
+        },
+        "accentTheme": {
+          "type": "string",
+          "description": "Realtime accent color theme enum key (e.g., GOLD, SKY, EMERALD, LAVENDER, CORAL, CRYSTAL)."
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Whether the update dialog is currently active for users."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (clients must write FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (clients must write FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "authorId",
+        "targetVersion",
+        "releaseNotes",
+        "appTitle",
+        "isAvailable",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "VipAccessEntry": {
+      "title": "VipAccessEntry",
+      "description": "Email allowlist entry granting free Danny Weather PRO 14-day forecast access.",
+      "type": "object",
+      "properties": {
+        "authorId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the studio admin who added this VIP email."
+        },
+        "email": {
+          "type": "string",
+          "description": "Normalized lowercase Google email address granted free PRO access."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when added (clients must write FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "authorId",
+        "email",
+        "createdAt"
+      ]
+    },
+    "AdminRole": {
+      "title": "AdminRole",
+      "description": "Server-managed role marker granting release management access.",
+      "type": "object",
+      "properties": {
+        "grantedBy": {
+          "type": "string",
+          "description": "Provisioner identifier."
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/app_releases/{releaseId}": {
+      "schema": { "$ref": "#/entities/AppRelease" },
+      "description": "Publicly readable release announcements and realtime accent theme config (canonical document id: latest), managed exclusively by DenDev Studio admins."
+    },
+    "/vip_access/{vipId}": {
+      "schema": { "$ref": "#/entities/VipAccessEntry" },
+      "description": "VIP email whitelist managed by admins; each verified signed-in user may only query their own normalized email."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminRole" },
+      "description": "Read-only admin authorization allowlist keyed by Firebase Auth UID."
+    }
+  }
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завантажити Danny Weather APK</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(180deg, #0b1320 0%, #0f172a 50%, #1e293b 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 48px;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        .banner-wrap {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 30%, rgba(30, 41, 59, 0.95) 100%);
+        }
+        .content {
+            padding: 0 24px 28px;
+            text-align: center;
+        }
+        .icon-wrap {
+            margin-top: -46px;
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+        }
+        .app-icon {
+            width: 92px;
+            height: 92px;
+            border-radius: 22px;
+            border: 3px solid #ffd54f;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            object-fit: cover;
+            background: #0f172a;
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: 800;
+            margin-top: 14px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+        .tagline {
+            font-size: 14px;
+            color: #ffd54f;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .desc {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #94a3b8;
+        }
+        .badge.highlight {
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #ffd54f 0%, #f59e0b 100%);
+            color: #0f172a;
+            font-size: 17px;
+            font-weight: 800;
+            text-decoration: none;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .download-btn:active {
+            transform: scale(0.97);
+        }
+        .download-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #0f172a;
+        }
+        .direct-url {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #94a3b8;
+            word-break: break-all;
+        }
+        .direct-url a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        .instructions {
+            margin-top: 24px;
+            text-align: left;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 16px 18px;
+        }
+        .instructions h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .instructions ol {
+            padding-left: 20px;
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .instructions li {
+            margin-bottom: 6px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner-wrap">
+            <img src="/banner.jpg" alt="Стрий Львівська область" class="banner-img">
+            <div class="banner-overlay"></div>
+        </div>
+        <div class="content">
+            <div class="icon-wrap">
+                <img src="/icon.jpg" alt="Danny Weather" class="app-icon">
+            </div>
+            <h1>Danny Weather</h1>
+            <p class="tagline">Погода для міста Стрий • Львівська обл.</p>
+            <p class="desc">Точний прогноз погоди, якість повітря, показники вітру та тиску на річці Стрий біля Карпат.</p>
+            
+            <div class="badge-row">
+                <span class="badge highlight">Android 7.0+ (APK)</span>
+                <span class="badge">Версія 1.0</span>
+                <span class="badge">24 МБ</span>
+            </div>
+
+            <a href="/DannyWeather.apk" download="DannyWeather.apk" class="download-btn">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                Завантажити DannyWeather.apk
+            </a>
+
+            <p class="direct-url">
+                Пряме посилання на файл: <br>
+                <a href="/DannyWeather.apk">/DannyWeather.apk</a>
+            </p>
+
+            <div class="instructions">
+                <h3>📱 Як встановити на Android:</h3>
+                <ol>
+                    <li>Натисніть велику жовту кнопку <b>«Завантажити DannyWeather.apk»</b> вище.</li>
+                    <li>Відкрийте завантажений файл у сповіщеннях телефону або папці «Завантаження».</li>
+                    <li>Якщо телефон запитає «Встановлення з невідомих джерел» — натисніть <b>«Дозволити»</b>.</li>
+                    <li>Підтвердіть встановлення і насолоджуйтесь погодою у місті Стрий!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <p class="footer">Danny Weather © 2026 • Стрий, Львівська область</p>
+</body>
+</html>

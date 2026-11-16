@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Danny Weather</string>
+    <string name="weather_loading">Оновлення погоди…</string>
+    <string name="weather_error">Не вдалося завантажити дані. Перевірте зʼєднання.</string>
+    <string name="refresh">Оновити</string>
+    <string name="feels_like">Відчувається як</string>
+    <string name="hourly_forecast">Погодинний прогноз</string>
+    <string name="daily_forecast">Прогноз на 14 днів</string>
+    <string name="air_quality">Якість повітря (AQI)</string>
+    <string name="wind">Вітер</string>
+    <string name="humidity">Вологість</string>
+    <string name="pressure">Тиск</string>
+    <string name="uv_index">УФ-індекс</string>
+    <string name="visibility">Видимість</string>
+    <string name="precipitation">Опади</string>
+    <string name="sunrise_sunset">Схід і захід сонця</string>
+    <string name="world_cities_title">Міста та країни світу</string>
+</resources>

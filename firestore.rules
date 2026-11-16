@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Global Reusable Security Primitives ---
+    function isValidId(id) {
+      return id is string &&
+             id.size() >= 1 &&
+             id.size() <= 128 &&
+             id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasVerifiedEmail() {
+      return isSignedIn() &&
+             ('email_verified' in request.auth.token) &&
+             request.auth.token.email_verified == true &&
+             ('email' in request.auth.token) &&
+             request.auth.token.email is string;
+    }
+
+    function isBootstrapAdmin() {
+      return hasVerifiedEmail() &&
+             request.auth.token.email.lower() == 'danyloandtadik@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrapAdmin() ||
+             (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    // --- Validation Blueprints ---
+    function isValidAppRelease(data) {
+      return data.authorId is string &&
+             data.authorId.size() >= 1 &&
+             data.authorId.size() <= 128 &&
+             data.targetVersion is string &&
+             data.targetVersion.size() >= 1 &&
+             data.targetVersion.size() <= 32 &&
+             data.releaseNotes is string &&
+             data.releaseNotes.size() <= 1500 &&
+             data.appTitle is string &&
+             data.appTitle.size() >= 1 &&
+             data.appTitle.size() <= 40 &&
+             (!('accentTheme' in data) || (data.accentTheme is string && data.accentTheme.size() >= 1 && data.accentTheme.size() <= 32)) &&
+             data.isAvailable is bool &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt is timestamp &&
+             data.updatedAt <= request.time;
+    }
+
+    function isValidVipAccess(data) {
+      return data.authorId is string &&
+             data.authorId.size() >= 1 &&
+             data.authorId.size() <= 128 &&
+             data.email is string &&
+             data.email.size() >= 3 &&
+             data.email.size() <= 160 &&
+             data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$') &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time;
+    }
+
+    // --- Admin Allowlist (Read self only; never client-writable) ---
+    match /admins/{adminUid} {
+      allow get: if isSignedIn() && isValidId(adminUid) && request.auth.uid == adminUid;
+      allow list: if false;
+      allow create, update, delete: if false;
+    }
+
+    // --- Public Cloud Release & Realtime Accent Theme Config ---
+    // Unauthenticated & signed-in users can receive release notes & live accentTheme changes;
+    // all mutations strictly require a verified admin account.
+    match /app_releases/{releaseId} {
+      allow get: if isValidId(releaseId);
+
+      // Rules are not filters: list queries must filter .whereEqualTo("isAvailable", true)
+      allow list: if existing().isAvailable == true;
+
+      allow create: if isSignedIn() &&
+                       isValidId(releaseId) &&
+                       isValidAppRelease(incoming()) &&
+                       incoming().authorId == request.auth.uid &&
+                       incoming().keys().hasAll([
+                         'authorId', 'targetVersion', 'releaseNotes', 'appTitle', 'isAvailable', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'authorId', 'targetVersion', 'releaseNotes', 'appTitle', 'accentTheme', 'isAvailable', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isAdmin();
+
+      allow update: if isSignedIn() &&
+                       isValidId(releaseId) &&
+                       isValidAppRelease(incoming()) &&
+                       incoming().authorId == existing().authorId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'targetVersion', 'releaseNotes', 'appTitle', 'accentTheme', 'isAvailable', 'updatedAt'
+                       ]) &&
+                       isAdmin();
+
+      allow delete: if isSignedIn() &&
+                       isValidId(releaseId) &&
+                       isAdmin();
+    }
+
+    // --- VIP Email Whitelist (PII-isolated; admin-managed) ---
+    match /vip_access/{vipId} {
+      allow get: if isValidId(vipId) && (
+        isAdmin() ||
+        (hasVerifiedEmail() && existing().email == request.auth.token.email.lower())
+      );
+
+      // List queries allowed for bootstrap admin OR signed-in user querying strictly their own email
+      allow list: if isBootstrapAdmin() ||
+                     (hasVerifiedEmail() && existing().email == request.auth.token.email.lower());
+
+      allow create: if isSignedIn() &&
+                       isValidId(vipId) &&
+                       isValidVipAccess(incoming()) &&
+                       incoming().authorId == request.auth.uid &&
+                       incoming().keys().hasAll(['authorId', 'email', 'createdAt']) &&
+                       incoming().keys().hasOnly(['authorId', 'email', 'createdAt']) &&
+                       isAdmin();
+
+      allow update: if false;
+
+      allow delete: if isSignedIn() &&
+                       isValidId(vipId) &&
+                       isAdmin();
+    }
+  }
+}

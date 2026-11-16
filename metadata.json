@@ -1,0 +1,6 @@
+{
+  "name": "Danny Weather",
+  "description": "Danny Weather v2.0 — global weather forecast app with Liquid Glass UI, 14-day forecast, air quality index, cloud account sync, and home screen widgets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
